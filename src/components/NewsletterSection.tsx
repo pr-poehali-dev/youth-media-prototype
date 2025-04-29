@@ -1,46 +1,68 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sparkles } from "lucide-react";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Пожалуйста, введите корректный email" }),
+});
 
 const NewsletterSection = () => {
-  const [email, setEmail] = useState("");
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Здесь будет логика подписки
-    console.log("Subscribed with:", email);
-    setEmail("");
-    // Можно добавить уведомление о успешной подписке
-  };
-  
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // В реальном приложении здесь был бы запрос к API
+    console.log(values);
+    form.reset();
+    // Показать сообщение об успешной подписке
+    alert("Вы успешно подписались на рассылку!");
+  }
+
   return (
-    <section className="py-12 prosto-gradient">
+    <section className="py-16 bg-gradient-to-r from-prosto-blue/10 to-prosto-purple/10">
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center text-white">
-          <Sparkles className="h-12 w-12 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold mb-4">Получайте лучшие материалы на почту</h2>
-          <p className="text-lg mb-8 opacity-90">
-            Никакого спама, только отборные статьи и новости один раз в неделю.
-            Саморазвиваться — просто!
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">Подпишись на рассылку</h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Получай самые интересные материалы, анонсы новых статей и приглашения на мероприятия
           </p>
           
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="Ваш email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="bg-white/20 border-white/30 placeholder:text-white/50 text-white"
-            />
-            <Button type="submit" className="bg-white text-prosto-purple hover:bg-white/90 font-medium">
-              Подписаться
-            </Button>
-          </form>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4 mx-auto max-w-md">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormControl>
+                      <Input 
+                        placeholder="Ваш email" 
+                        className="w-full h-12 rounded-lg" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button 
+                type="submit" 
+                className="h-12 px-8 bg-prosto-purple hover:bg-prosto-purple/90 text-white"
+              >
+                Подписаться
+              </Button>
+            </form>
+          </Form>
           
-          <p className="mt-4 text-sm opacity-75">
-            Нажимая на кнопку, вы соглашаетесь с политикой конфиденциальности
+          <p className="mt-4 text-sm text-gray-500">
+            Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности
           </p>
         </div>
       </div>

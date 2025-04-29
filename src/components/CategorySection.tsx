@@ -1,103 +1,98 @@
-import { Button } from "@/components/ui/button";
+import { ArrowRight, BookOpen, Headphones, Map, LucideIcon, Gift, MessageSquare } from "lucide-react";
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 
-type Category = {
-  id: string;
+type CategoryCardProps = {
   title: string;
   description: string;
-  image: string;
-  path: string;
+  icon: ReactNode;
   color: string;
-  action: string;
+  link: string;
+  gradient: string;
 };
 
-const categories: Category[] = [
+const CategoryCard = ({ title, description, icon, color, link, gradient }: CategoryCardProps) => {
+  return (
+    <Link to={link} className="block">
+      <div 
+        className={`p-6 rounded-2xl card-hover h-full ${gradient} border border-gray-100`}
+      >
+        <div className={`inline-flex items-center justify-center h-12 w-12 rounded-xl mb-4 ${color}`}>
+          {icon}
+        </div>
+        <h3 className="text-xl font-bold mb-2">просто.{title}</h3>
+        <p className="text-gray-600 mb-4">{description}</p>
+        <div className="flex items-center text-prosto-blue font-medium">
+          Перейти <ArrowRight className="ml-2 h-4 w-4" />
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+const categories = [
   {
-    id: "reading",
-    title: "просто.читаем",
+    title: "читаем",
     description: "Статьи о предпринимательстве, саморазвитии и современных профессиях",
-    image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    path: "/reading",
+    icon: <BookOpen className="h-6 w-6 text-white" />,
     color: "bg-prosto-blue",
-    action: "Читать"
+    link: "/reading",
+    gradient: "bg-gradient-to-br from-white to-blue-50"
   },
   {
-    id: "listening",
-    title: "просто.слушаем",
+    title: "слушаем",
     description: "Подкасты о психологии, карьерных историях и опыте молодых профессионалов",
-    image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    path: "/listening",
+    icon: <Headphones className="h-6 w-6 text-white" />,
     color: "bg-prosto-purple",
-    action: "Слушать"
+    link: "/listening",
+    gradient: "bg-gradient-to-br from-white to-purple-50"
   },
   {
-    id: "exploring",
-    title: "просто.открываем",
-    description: "Гайды по выставкам, местам и городским событиям",
-    image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    path: "/exploring",
-    color: "bg-green-500",
-    action: "Открыть"
+    title: "открываем",
+    description: "Гайды по выставкам, интересным местам и городским событиям",
+    icon: <Map className="h-6 w-6 text-white" />,
+    color: "bg-prosto-teal",
+    link: "/exploring",
+    gradient: "bg-gradient-to-br from-white to-teal-50"
+  },
+  {
+    title: "раскрываемся",
+    description: "Тесты, опросы и викторины для самопознания и развития",
+    icon: <MessageSquare className="h-6 w-6 text-white" />,
+    color: "bg-pink-500",
+    link: "/expressing",
+    gradient: "bg-gradient-to-br from-white to-pink-50"
+  },
+  {
+    title: "бонус",
+    description: "Обои для рабочего стола, шаблоны и printable-календари",
+    icon: <Gift className="h-6 w-6 text-white" />,
+    color: "bg-amber-500",
+    link: "/bonus",
+    gradient: "bg-gradient-to-br from-white to-amber-50"
+  },
+  {
+    title: "болтаем",
+    description: "Форум для обсуждения и общения с единомышленниками",
+    icon: <MessageSquare className="h-6 w-6 text-white" />,
+    color: "bg-emerald-500",
+    link: "/chat",
+    gradient: "bg-gradient-to-br from-white to-emerald-50"
   }
 ];
 
 const CategorySection = () => {
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-4">Основные разделы</h2>
-        <p className="text-gray-600 mb-8">Выберите интересующий вас формат контента</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+        <h2 className="text-3xl font-bold mb-12 text-center">Наши рубрики</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((category, index) => (
+            <CategoryCard key={index} {...category} />
           ))}
-        </div>
-        
-        <div className="mt-12 text-center">
-          <Link to="/categories" className="inline-flex items-center text-prosto-blue hover:text-prosto-purple transition-colors font-medium">
-            Показать все разделы
-            <ChevronRight className="ml-1 h-4 w-4" />
-          </Link>
         </div>
       </div>
     </section>
-  );
-};
-
-const CategoryCard = ({ category }: { category: Category }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden prosto-card-hover">
-      <div className="relative h-48">
-        <img 
-          src={category.image} 
-          alt={category.title}
-          className="w-full h-full object-cover" 
-        />
-        <div className={`absolute top-4 right-4 ${category.color} text-white px-3 py-1 text-sm rounded-full`}>
-          Новое
-        </div>
-      </div>
-      <div className="p-5">
-        <h3 className="text-xl font-bold mb-2">{category.title}</h3>
-        <p className="text-gray-600 mb-4">{category.description}</p>
-        <div className="flex justify-between items-center">
-          <Button 
-            variant="outline" 
-            className="border-gray-300 hover:border-prosto-blue text-gray-700 hover:text-prosto-blue"
-          >
-            {category.action}
-          </Button>
-          <Link 
-            to={category.path} 
-            className="text-prosto-blue hover:text-prosto-purple text-sm font-medium"
-          >
-            Все материалы →
-          </Link>
-        </div>
-      </div>
-    </div>
   );
 };
 

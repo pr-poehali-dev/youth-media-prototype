@@ -13,7 +13,7 @@ const MainHeader = () => {
         {/* Логотип */}
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-mono font-bold text-prosto-dark">
+            <span className="text-2xl font-sans font-bold text-prosto-dark">
               просто<span className="text-prosto-blue">.</span>медиа
             </span>
           </Link>
@@ -67,7 +67,7 @@ const NavLinks = ({ mobile = false, onClick = () => {} }) => {
         <Link
           key={item.path}
           to={item.path}
-          className={`text-gray-600 hover:text-prosto-purple transition-colors ${
+          className={`text-gray-700 hover:text-prosto-blue transition-colors ${
             mobile ? "block py-2 border-b border-gray-100" : ""
           }`}
           onClick={onClick}

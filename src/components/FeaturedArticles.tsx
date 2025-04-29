@@ -1,124 +1,211 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import { Clock, MessageSquare, ThumbsUp } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowRight, BookOpen, Headphones, Map } from "lucide-react";
 
-type Article = {
-  id: string;
+interface ArticleCardProps {
   title: string;
-  description: string;
+  excerpt: string;
   image: string;
   category: string;
   readTime: string;
-  comments: number;
-  likes: number;
-  slug: string;
+  type: "article" | "podcast" | "guide";
+}
+
+const ArticleCard = ({ title, excerpt, image, category, readTime, type }: ArticleCardProps) => {
+  const getIcon = () => {
+    switch (type) {
+      case "article":
+        return <BookOpen className="h-4 w-4 mr-1" />;
+      case "podcast":
+        return <Headphones className="h-4 w-4 mr-1" />;
+      case "guide":
+        return <Map className="h-4 w-4 mr-1" />;
+      default:
+        return <BookOpen className="h-4 w-4 mr-1" />;
+    }
+  };
+
+  const getButtonText = () => {
+    switch (type) {
+      case "article":
+        return "Читать";
+      case "podcast":
+        return "Слушать";
+      case "guide":
+        return "Смотреть";
+      default:
+        return "Открыть";
+    }
+  };
+
+  return (
+    <Card className="overflow-hidden card-hover border border-gray-200">
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        />
+        <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-sm text-xs font-medium py-1 px-2 rounded-full">
+          {category}
+        </div>
+      </div>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl font-bold leading-tight">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription className="text-gray-600 line-clamp-2">
+          {excerpt}
+        </CardDescription>
+      </CardContent>
+      <CardFooter className="flex justify-between pt-0">
+        <span className="text-sm text-gray-500 flex items-center">
+          {getIcon()} {readTime}
+        </span>
+        <Button variant="ghost" className="text-prosto-blue p-0 h-auto hover:bg-transparent hover:text-prosto-purple">
+          {getButtonText()} <ArrowRight className="ml-1 h-4 w-4" />
+        </Button>
+      </CardFooter>
+    </Card>
+  );
 };
 
-const articles: Article[] = [
+const featuredArticles = [
   {
-    id: "1",
-    title: "10 навыков успешного фрилансера в 2025 году",
-    description: "Какие компетенции необходимо освоить, чтобы быть конкурентоспособным на рынке удалённой работы",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    category: "просто.читаем",
+    title: "Как найти свой путь в IT-сфере без опыта работы",
+    excerpt: "Пошаговое руководство для новичков, которые хотят построить карьеру в IT",
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Карьера",
     readTime: "7 мин",
-    comments: 23,
-    likes: 89,
-    slug: "freelance-skills-2025"
+    type: "article" as const
   },
   {
-    id: "2",
-    title: "Выгорание: как распознать и что делать",
-    description: "Психолог о причинах профессионального выгорания и способах восстановления ресурсов",
-    image: "https://images.unsplash.com/photo-1581595219315-a187dd40c322?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    category: "просто.слушаем",
-    readTime: "35 мин",
-    comments: 47,
-    likes: 132,
-    slug: "burnout-prevention"
+    title: "5 практик осознанности для снятия стресса",
+    excerpt: "Простые техники медитации, которые можно практиковать даже в офисе",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Саморазвитие",
+    readTime: "5 мин",
+    type: "article" as const
   },
   {
-    id: "3",
-    title: "Малоизвестные музеи Петербурга: гид по скрытым жемчужинам",
-    description: "Пять удивительных музеев города, о которых знают не все",
-    image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    category: "просто.открываем",
+    title: "История успеха: от курьера до технического директора",
+    excerpt: "Интервью с Александром, который прошел путь от доставки еды до руководящей должности",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Истории",
     readTime: "12 мин",
-    comments: 18,
-    likes: 76,
-    slug: "hidden-spb-museums"
+    type: "article" as const
+  }
+];
+
+const featuredPodcasts = [
+  {
+    title: "Эпизод 42: Выгорание и как с ним бороться",
+    excerpt: "Психолог Марина Соколова рассказывает о профессиональном выгорании и методах его преодоления",
+    image: "https://images.unsplash.com/photo-1519682577862-22b62b24e493?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Психология",
+    readTime: "32 мин",
+    type: "podcast" as const
+  },
+  {
+    title: "Эпизод 41: Финансовая грамотность для новичков",
+    excerpt: "Основы личных финансов, инвестиций и планирования бюджета для молодых специалистов",
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Финансы",
+    readTime: "45 мин",
+    type: "podcast" as const
+  },
+  {
+    title: "Эпизод 40: Как начать свой бизнес в 20 лет",
+    excerpt: "История основателя стартапа, который начал свой бизнес, будучи студентом",
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Предпринимательство",
+    readTime: "38 мин",
+    type: "podcast" as const
+  }
+];
+
+const featuredGuides = [
+  {
+    title: "Топ-10 выставок Санкт-Петербурга этой весной",
+    excerpt: "Обзор самых интересных культурных событий города на ближайшие месяцы",
+    image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Культура",
+    readTime: "8 мин",
+    type: "guide" as const
+  },
+  {
+    title: "Нескучные места для работы: коворкинги Петербурга",
+    excerpt: "Где можно комфортно поработать, провести встречу или найти единомышленников",
+    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Места",
+    readTime: "6 мин",
+    type: "guide" as const
+  },
+  {
+    title: "Как провести выходные: городские события на уикенд",
+    excerpt: "Подборка интересных мероприятий и активностей для отдыха в городе",
+    image: "https://images.unsplash.com/photo-1465310477141-6fb93167a273?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "События",
+    readTime: "4 мин",
+    type: "guide" as const
   }
 ];
 
 const FeaturedArticles = () => {
   return (
-    <section className="py-12">
+    <section className="py-16">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl font-bold">Популярное сейчас</h2>
-            <p className="text-gray-600 mt-2">Самые читаемые материалы недели</p>
-          </div>
-          <Link to="/popular">
-            <Button variant="outline">Все популярные</Button>
-          </Link>
-        </div>
+        <h2 className="text-3xl font-bold mb-6">Свежее на просто.медиа</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </div>
+        <Tabs defaultValue="articles" className="w-full">
+          <TabsList className="mb-8">
+            <TabsTrigger value="articles" className="text-sm md:text-base">просто.читаем</TabsTrigger>
+            <TabsTrigger value="podcasts" className="text-sm md:text-base">просто.слушаем</TabsTrigger>
+            <TabsTrigger value="guides" className="text-sm md:text-base">просто.открываем</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="articles">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredArticles.map((article, index) => (
+                <ArticleCard key={index} {...article} />
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Button variant="outline" className="border-prosto-blue text-prosto-blue hover:bg-prosto-blue/10">
+                Все статьи <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="podcasts">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredPodcasts.map((podcast, index) => (
+                <ArticleCard key={index} {...podcast} />
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Button variant="outline" className="border-prosto-purple text-prosto-purple hover:bg-prosto-purple/10">
+                Все подкасты <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="guides">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredGuides.map((guide, index) => (
+                <ArticleCard key={index} {...guide} />
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Button variant="outline" className="border-prosto-teal text-prosto-teal hover:bg-teal-100/30">
+                Все гайды <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </section>
-  );
-};
-
-const ArticleCard = ({ article }: { article: Article }) => {
-  return (
-    <Card className="overflow-hidden prosto-card-hover">
-      <div className="relative h-48">
-        <img 
-          src={article.image} 
-          alt={article.title}
-          className="w-full h-full object-cover" 
-        />
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-          <span className="text-white text-sm font-medium px-3 py-1 rounded-full bg-black/30">
-            {article.category}
-          </span>
-        </div>
-      </div>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl line-clamp-2">{article.title}</CardTitle>
-        <CardDescription className="line-clamp-2 mt-2">{article.description}</CardDescription>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex text-sm text-gray-500 gap-4">
-          <div className="flex items-center">
-            <Clock className="h-4 w-4 mr-1" />
-            {article.readTime}
-          </div>
-          <div className="flex items-center">
-            <MessageSquare className="h-4 w-4 mr-1" />
-            {article.comments}
-          </div>
-          <div className="flex items-center">
-            <ThumbsUp className="h-4 w-4 mr-1" />
-            {article.likes}
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Link 
-          to={`/article/${article.slug}`}
-          className="text-prosto-blue hover:text-prosto-purple font-medium"
-        >
-          Читать полностью
-        </Link>
-      </CardFooter>
-    </Card>
   );
 };
 

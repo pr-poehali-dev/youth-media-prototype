@@ -64,14 +64,16 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				prosto: {
-					blue: '#33C3F0',
-					purple: '#8B5CF6',
-					light: '#F6F6F7',
-					dark: '#333333'
+					blue: '#33C3F0',   // Голубой цвет из брендбука ПРОСТО
+					purple: '#9b87f5', // Фиолетовый цвет из брендбука ПРОСТО
+					light: '#F6F6F7',  // Светлый фон
+					dark: '#333333',   // Тёмный текст
+					teal: '#00D2D2',   // Бирюзовый акцент
+					pink: '#FF7BAC'    // Розовый акцент
 				}
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
+				sans: ['Noto Sans', 'Inter', 'sans-serif'],  // Основной шрифт из брендбука
 				mono: ['JetBrains Mono', 'monospace']
 			},
 			borderRadius: {
